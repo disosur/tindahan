@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: monorepo-postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+  users-service:
+    build: ./services/users-service
+    env_file: ./services/users/.env
+    depends_on:
+      - postgres
+    ports:
+      - "3001:3000"
+
+  orders-service:
+    build: ./services/orders-service
+    env_file: ./services/orders/.env
+    depends_on:
+      - postgres
+    ports:
+      - "3002:3000"
+
+  # add more services below
