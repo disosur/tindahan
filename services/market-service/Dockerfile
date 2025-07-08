@@ -1,17 +1,18 @@
-FROM node:20-alpine
+FROM oven/bun:1.1
 
-# Set working directory inside the container
 WORKDIR /app
 
-# Copy package.json and install dependencies first
-COPY package*.json ./
+# Copy dependency files first
+COPY bun.lockb package.json ./
+RUN bun install
 
-RUN npm install
-
-# Copy the rest of the code
+# Copy source code
 COPY . .
+
+# Build the project (compiles TypeScript to JS)
+RUN bun build src/index.ts --outdir dist
 
 EXPOSE 3000
 
-# Start the service
-CMD ["npm", "run", "dev"]
+# Run the built JavaScript
+CMD ["bun", "run", "dist/index.js"]
