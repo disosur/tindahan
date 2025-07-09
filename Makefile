@@ -1,6 +1,13 @@
 SERVICES := $(shell find services -maxdepth 1 -mindepth 1 -type d)
 
-.PHONY: install dev all install-app kill-ports
+PROTOC        := protoc
+PROTOC_GEN_TS := ./node_modules/.bin/protoc-gen-ts_proto
+
+PROTO_SRC     := protobuffs
+OUT_DIR       := ./protobuffs/generated
+PROTO_FILES   := $(shell find $(PROTO_SRC) -name "*.proto")
+
+.PHONY: install dev all install-app kill-ports protos clean-protos
 
 install:
 	@for dir in $(SERVICES); do \
@@ -30,3 +37,17 @@ install-app:
 kill-ports:
 	@echo "Killing processes on ports 3000–3012..."
 	@sudo lsof -ti :3000-3012 | xargs -r kill -9 || true
+
+protos:
+	@echo "📦 Generating TypeScript from Protobufs..."
+	@mkdir -p $(OUT_DIR)
+	$(PROTOC) \
+		--plugin=$(PROTOC_GEN_TS) \
+		--ts_proto_out=$(OUT_DIR) \
+		--ts_proto_opt=esModuleInterop=true,forceLong=long,useOptionals=all \
+		--proto_path=$(PROTO_SRC) \
+		$(PROTO_FILES)
+
+clean-protos:
+	@echo "🧹 Cleaning generated protobufs..."
+	rm -rf $(OUT_DIR)
