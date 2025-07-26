@@ -4,9 +4,9 @@
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
-    "dotenv": "^17.1.0",
-    "drizzle-orm": "^0.44.2",
-    "hono": "^4.8.4",
+    "dotenv": "^17.2.1",
+    "drizzle-orm": "^0.44.3",
+    "hono": "^4.8.9",
     "pg": "^8.16.3"
   },
   "devDependencies": {

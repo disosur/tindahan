@@ -1,4 +1,6 @@
 SERVICES := $(shell find services -maxdepth 1 -mindepth 1 -type d)
+FUNCTIONS := $(shell find functions -maxdepth 1 -mindepth 1 -type d)
+APP := $(shell find app -maxdepth 1 -mindepth 1 -type d)
 
 PROTOC        := protoc
 PROTOC_GEN_TS := ./node_modules/.bin/protoc-gen-ts_proto
@@ -7,16 +9,16 @@ PROTO_SRC     := protobuffs
 OUT_DIR       := ./protobuffs/generated
 PROTO_FILES   := $(shell find $(PROTO_SRC) -name "*.proto")
 
-.PHONY: install dev all install-app kill-ports protos clean-protos
+.PHONY: install dev all install-app kill-ports protos clean-protos update
 
 install:
-	@for dir in $(SERVICES); do \
+	@for dir in $(SERVICES) $(FUNCTIONS) $(APP); do \
 		echo "Installing in $$dir..."; \
 		(cd $$dir && bun install); \
 	done
 
 dev:
-	@for dir in $(SERVICES); do \
+	@for dir in $(SERVICES) $(FUNCTIONS) $(APP); do \
 		echo "Starting dev in $$dir..."; \
 		(cd $$dir && bun run dev) & \
 	done
@@ -29,7 +31,7 @@ install-app:
 		echo "❌ Usage: make install-app package=your-package-name"; \
 		exit 1; \
 	fi
-	@for dir in $(SERVICES); do \
+	@for dir in $(SERVICES) $(FUNCTIONS); do \
 		echo "📦 Adding '$(package)' in $$dir..."; \
 		(cd $$dir && bun add $(package)); \
 	done
@@ -51,3 +53,12 @@ protos:
 clean-protos:
 	@echo "🧹 Cleaning generated protobufs..."
 	rm -rf $(OUT_DIR)
+
+update:
+	@for dir in $(SERVICES) $(FUNCTIONS) $(APP); do \
+		echo "Checking for outdated packages in $$dir..."; \
+		(cd $$dir && bun outdated); \
+		echo "Updating packages in $$dir..."; \
+		(cd $$dir && bun update); \
+	done
+
