@@ -4,10 +4,12 @@
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
+    "@openauthjs/openauth": "^0.4.3",
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.3",
     "hono": "^4.8.9",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "valibot": "^1.1.0"
   },
   "devDependencies": {
     "@types/bun": "latest"
