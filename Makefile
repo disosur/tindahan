@@ -62,3 +62,28 @@ update:
 		(cd $$dir && bun update); \
 	done
 
+generate-envs:
+	@echo "🔧 Generating or updating DATABASE_URL in .env files for all services..."
+	@PG_USER=user; \
+	PG_PASS=pass; \
+	PG_HOST=localhost; \
+	PG_PORT=5432; \
+	for dir in $(SERVICES); do \
+		service_name=$$(basename $$dir); \
+		db_name=$$(echo $$service_name | sed 's/-service$$//' | sed 's/^order$$/orders/'); \
+		env_path="$$dir/.env"; \
+		mkdir -p "$$dir"; \
+		url="postgresql://$$PG_USER:$$PG_PASS@$$PG_HOST:$$PG_PORT/$$db_name"; \
+		if [ -f $$env_path ]; then \
+			if grep -q '^DATABASE_URL=' $$env_path; then \
+				sed -i "s|^DATABASE_URL=.*|DATABASE_URL=$$url|" $$env_path; \
+			else \
+				echo "DATABASE_URL=$$url" >> $$env_path; \
+			fi; \
+		else \
+			echo "DATABASE_URL=$$url" > $$env_path; \
+		fi; \
+		echo "✅ Set DATABASE_URL in $$env_path"; \
+	done
+
+
