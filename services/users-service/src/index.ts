@@ -1,18 +1,16 @@
-import { Hono } from 'hono'
-import 'dotenv/config';
-import { drizzle } from 'drizzle-orm/node-postgres';
+import { Hono } from "hono";
+import "dotenv/config";
+import { drizzle } from "drizzle-orm/node-postgres";
 
-const app = new Hono()
-
+const app = new Hono();
 
 const db = drizzle(process.env.DATABASE_URL!);
 
+app.get("/", (c) => {
+  return c.text("Hello Hono!");
+});
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
-
-export default { 
-  port: 3008, 
-  fetch: app.fetch, 
-} 
+export default {
+  port: 3008,
+  fetch: app.fetch,
+};
