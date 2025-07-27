@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
   Package,
@@ -17,132 +17,142 @@ import {
   X,
   Palette,
   ArrowLeft,
-} from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useState } from "react"
+} from "lucide-react";
+import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 
 interface SidebarProps {
-  role: "user" | "store" | "admin"
-  storeId?: string
+  role: "user" | "store" | "admin";
+  storeId?: string;
 }
 
 export function Sidebar({ role, storeId }: SidebarProps) {
-  const pathname = usePathname()
-  const [isCollapsed, setIsCollapsed] = useState(false)
-  const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const getUserNavItems = () => [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Create Store", href: "/dashboard/create-store", icon: Store },
-  ]
+    { name: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
+    { name: "Create Store", to: "/dashboard/create-store", icon: Store },
+  ];
 
   const getStoreNavItems = () => [
-    { name: "Store Dashboard", href: `/store/${storeId}`, icon: Store },
+    { name: "Store Dashboard", to: `/store/${storeId}`, icon: Store },
     {
       name: "Inventory",
       icon: Package,
-      children: [{ name: "Products", href: `/store/${storeId}/inventory` }],
+      children: [{ name: "Products", to: `/store/${storeId}/inventory` }],
     },
     {
       name: "Orders",
       icon: ShoppingCart,
-      children: [{ name: "All Orders", href: `/store/${storeId}/orders` }],
+      children: [{ name: "All Orders", to: `/store/${storeId}/orders` }],
     },
     {
       name: "Discounts",
       icon: Tag,
-      children: [{ name: "All Discounts", href: `/store/${storeId}/discounts` }],
+      children: [{ name: "All Discounts", to: `/store/${storeId}/discounts` }],
     },
     {
       name: "Customers",
       icon: Users,
-      children: [{ name: "All Customers", href: `/store/${storeId}/customers` }],
+      children: [{ name: "All Customers", to: `/store/${storeId}/customers` }],
     },
     {
       name: "Employees",
       icon: UserPlus,
       children: [
-        { name: "All Employees", href: `/store/${storeId}/employees` },
-        { name: "Invite Employee", href: `/store/${storeId}/employees/invite` },
+        { name: "All Employees", to: `/store/${storeId}/employees` },
+        { name: "Invite Employee", to: `/store/${storeId}/employees/invite` },
       ],
     },
     {
       name: "Design",
       icon: Palette,
       children: [
-        { name: "Page Builder", href: `/store/${storeId}/design/page-builder` },
-        { name: "Themes", href: `/store/${storeId}/design/themes` },
-        { name: "Custom Code", href: `/store/${storeId}/design/custom-code` },
+        { name: "Page Builder", to: `/store/${storeId}/design/page-builder` },
+        { name: "Themes", to: `/store/${storeId}/design/themes` },
+        { name: "Custom Code", to: `/store/${storeId}/design/custom-code` },
       ],
     },
     {
       name: "Settings",
       icon: Settings,
       children: [
-        { name: "General", href: `/store/${storeId}/settings/general` },
-        { name: "Billing", href: `/store/${storeId}/settings/billing` },
-        { name: "Payments", href: `/store/${storeId}/settings/payments` },
-        { name: "Shipping", href: `/store/${storeId}/settings/shipping` },
-        { name: "Taxes", href: `/store/${storeId}/settings/taxes` },
-        { name: "Notifications", href: `/store/${storeId}/settings/notifications` },
-        { name: "Integrations", href: `/store/${storeId}/settings/integrations` },
+        { name: "General", to: `/store/${storeId}/settings/general` },
+        { name: "Billing", to: `/store/${storeId}/settings/billing` },
+        { name: "Payments", to: `/store/${storeId}/settings/payments` },
+        { name: "Shipping", to: `/store/${storeId}/settings/shipping` },
+        { name: "Taxes", to: `/store/${storeId}/settings/taxes` },
+        {
+          name: "Notifications",
+          to: `/store/${storeId}/settings/notifications`,
+        },
+        { name: "Integrations", to: `/store/${storeId}/settings/integrations` },
       ],
     },
-  ]
+  ];
 
   const getAdminNavItems = () => [
-    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { name: "Dashboard", to: "/admin", icon: LayoutDashboard },
     {
       name: "Stores",
       icon: Store,
-      children: [{ name: "All Stores", href: "/admin/stores" }],
+      children: [{ name: "All Stores", to: "/admin/stores" }],
     },
     {
       name: "Users",
       icon: Users,
-      children: [{ name: "All Users", href: "/admin/users" }],
+      children: [{ name: "All Users", to: "/admin/users" }],
     },
     {
       name: "Employees",
       icon: UserPlus,
-      children: [{ name: "All Employees", href: "/admin/employees" }],
+      children: [{ name: "All Employees", to: "/admin/employees" }],
     },
     {
       name: "Plugins",
       icon: Puzzle,
-      children: [{ name: "All Plugins", href: "/admin/plugins" }],
+      children: [{ name: "All Plugins", to: "/admin/plugins" }],
     },
     {
       name: "Marketplace",
       icon: Store,
-      children: [{ name: "Browse Marketplace", href: "/admin/marketplace" }],
+      children: [{ name: "Browse Marketplace", to: "/admin/marketplace" }],
     },
-  ]
+  ];
 
   const getNavItems = () => {
     switch (role) {
       case "user":
-        return getUserNavItems()
+        return getUserNavItems();
       case "store":
-        return getStoreNavItems()
+        return getStoreNavItems();
       case "admin":
-        return getAdminNavItems()
+        return getAdminNavItems();
       default:
-        return []
+        return [];
     }
-  }
+  };
 
-  const navItems = getNavItems()
+  const navItems = getNavItems();
 
   const NavContent = () => (
     <div className="flex flex-col h-full">
       <div className="p-4 border-b">
         <div className="flex items-center justify-between">
           <h2 className={cn("font-semibold text-lg", isCollapsed && "hidden")}>
-            {role === "admin" ? "Admin Panel" : role === "store" ? "Store Panel" : "Dashboard"}
+            {role === "admin"
+              ? "Admin Panel"
+              : role === "store"
+                ? "Store Panel"
+                : "Dashboard"}
           </h2>
-          <Button variant="ghost" size="icon" onClick={() => setIsCollapsed(!isCollapsed)} className="hidden md:flex">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="hidden md:flex"
+          >
             <Menu className="h-4 w-4" />
           </Button>
         </div>
@@ -151,8 +161,11 @@ export function Sidebar({ role, storeId }: SidebarProps) {
       <nav className="flex-1 p-4 space-y-2">
         {/* Back to Dashboard button for store mode */}
         {role === "store" && (
-          <Link href="/dashboard">
-            <Button variant="outline" className="w-full justify-start border-dashed mb-4 bg-transparent">
+          <Link to="/dashboard">
+            <Button
+              variant="outline"
+              className="w-full justify-start border-dashed mb-4 bg-transparent"
+            >
               <ArrowLeft className="mr-2 h-4 w-4" />
               {!isCollapsed && "Back to Dashboard"}
             </Button>
@@ -160,17 +173,27 @@ export function Sidebar({ role, storeId }: SidebarProps) {
         )}
 
         {navItems.map((item) => (
-          <NavItem key={item.name} item={item} pathname={pathname} isCollapsed={isCollapsed} />
+          <NavItem
+            key={item.name}
+            item={item}
+            pathname=""
+            isCollapsed={isCollapsed}
+          />
         ))}
       </nav>
     </div>
-  )
+  );
 
   return (
     <>
       {/* Mobile Sidebar */}
       <div className="md:hidden">
-        <Button variant="ghost" size="icon" onClick={() => setIsMobileOpen(true)} className="fixed top-4 left-4 z-50">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsMobileOpen(true)}
+          className="fixed top-4 left-4 z-50"
+        >
           <Menu className="h-4 w-4" />
         </Button>
 
@@ -179,7 +202,11 @@ export function Sidebar({ role, storeId }: SidebarProps) {
             <div className="fixed left-0 top-0 h-full w-80 bg-card border-r shadow-lg">
               <div className="flex items-center justify-between p-4 border-b">
                 <h2 className="font-semibold text-lg">Menu</h2>
-                <Button variant="ghost" size="icon" onClick={() => setIsMobileOpen(false)}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsMobileOpen(false)}
+                >
                   <X className="h-4 w-4" />
                 </Button>
               </div>
@@ -193,13 +220,13 @@ export function Sidebar({ role, storeId }: SidebarProps) {
       <div
         className={cn(
           "hidden md:flex flex-col h-screen bg-card border-r transition-all duration-300",
-          isCollapsed ? "w-16" : "w-64",
+          isCollapsed ? "w-16" : "w-64"
         )}
       >
         <NavContent />
       </div>
     </>
-  )
+  );
 }
 
 function NavItem({
@@ -207,28 +234,37 @@ function NavItem({
   pathname,
   isCollapsed,
 }: {
-  item: any
-  pathname: string
-  isCollapsed: boolean
+  item: any;
+  pathname: string;
+  isCollapsed: boolean;
 }) {
-  const [isOpen, setIsOpen] = useState(false)
-  const hasChildren = item.children && item.children.length > 0
+  const [isOpen, setIsOpen] = useState(false);
+  const hasChildren = item.children && item.children.length > 0;
   const isActive =
-    pathname === item.href || (hasChildren && item.children.some((child: any) => pathname === child.href))
+    pathname === item.to ||
+    (hasChildren && item.children.some((child: any) => pathname === child.to));
 
   if (hasChildren) {
     return (
       <div>
         <Button
           variant={isActive ? "secondary" : "ghost"}
-          className={cn("w-full justify-start", isCollapsed && "justify-center px-2")}
+          className={cn(
+            "w-full justify-start",
+            isCollapsed && "justify-center px-2"
+          )}
           onClick={() => setIsOpen(!isOpen)}
         >
           <item.icon className="h-4 w-4" />
           {!isCollapsed && (
             <>
               <span className="ml-2">{item.name}</span>
-              <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", isOpen && "rotate-180")} />
+              <ChevronDown
+                className={cn(
+                  "ml-auto h-4 w-4 transition-transform",
+                  isOpen && "rotate-180"
+                )}
+              />
             </>
           )}
         </Button>
@@ -236,9 +272,9 @@ function NavItem({
         {isOpen && !isCollapsed && (
           <div className="ml-4 mt-1 space-y-1">
             {item.children.map((child: any) => (
-              <Link key={child.href} href={child.href}>
+              <Link key={child.to} to={child.to}>
                 <Button
-                  variant={pathname === child.href ? "secondary" : "ghost"}
+                  variant={pathname === child.to ? "secondary" : "ghost"}
                   className="w-full justify-start text-sm"
                   size="sm"
                 >
@@ -249,18 +285,21 @@ function NavItem({
           </div>
         )}
       </div>
-    )
+    );
   }
 
   return (
-    <Link href={item.href}>
+    <Link to={item.to}>
       <Button
         variant={isActive ? "secondary" : "ghost"}
-        className={cn("w-full justify-start", isCollapsed && "justify-center px-2")}
+        className={cn(
+          "w-full justify-start",
+          isCollapsed && "justify-center px-2"
+        )}
       >
         <item.icon className="h-4 w-4" />
         {!isCollapsed && <span className="ml-2">{item.name}</span>}
       </Button>
     </Link>
-  )
+  );
 }
