@@ -9,9 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StoreIndexRouteImport } from './routes/store/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardCreateStoreRouteImport } from './routes/dashboard/create-store'
 
+const StoreIndexRoute = StoreIndexRouteImport.update({
+  id: '/store/',
+  path: '/store/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
@@ -26,31 +32,42 @@ const DashboardCreateStoreRoute = DashboardCreateStoreRouteImport.update({
 export interface FileRoutesByFullPath {
   '/dashboard/create-store': typeof DashboardCreateStoreRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/store': typeof StoreIndexRoute
 }
 export interface FileRoutesByTo {
   '/dashboard/create-store': typeof DashboardCreateStoreRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/store': typeof StoreIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/dashboard/create-store': typeof DashboardCreateStoreRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/store/': typeof StoreIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/dashboard/create-store' | '/dashboard'
+  fullPaths: '/dashboard/create-store' | '/dashboard' | '/store'
   fileRoutesByTo: FileRoutesByTo
-  to: '/dashboard/create-store' | '/dashboard'
-  id: '__root__' | '/dashboard/create-store' | '/dashboard/'
+  to: '/dashboard/create-store' | '/dashboard' | '/store'
+  id: '__root__' | '/dashboard/create-store' | '/dashboard/' | '/store/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   DashboardCreateStoreRoute: typeof DashboardCreateStoreRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  StoreIndexRoute: typeof StoreIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/store/': {
+      id: '/store/'
+      path: '/store'
+      fullPath: '/store'
+      preLoaderRoute: typeof StoreIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/dashboard'
@@ -71,6 +88,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   DashboardCreateStoreRoute: DashboardCreateStoreRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  StoreIndexRoute: StoreIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
